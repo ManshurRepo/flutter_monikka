@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_scanqr/bloc/product/product_bloc.dart';
 import 'package:flutter_scanqr/models/product_model.dart';
+import 'package:flutter_scanqr/widgets/delete_success_alert.dart';
+import 'package:flutter_scanqr/widgets/edit_success_alert.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:intl/intl.dart';
 
@@ -275,7 +277,11 @@ class UpdateProductPage extends StatelessWidget {
                       );
                     }
                     if (state is StateSuccessEdit) {
-                      Navigator.pop(context);
+                       Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const EditSuccessAlert()),
+                      );
                     }
                   },
                   builder: (context, state) {
@@ -288,34 +294,77 @@ class UpdateProductPage extends StatelessWidget {
                   },
                 ),
               ),
-              TextButton(
-                  onPressed: () {
+              const SizedBox(height: 15),
+              ElevatedButton(
+                onPressed: () async {
+                  // Menampilkan dialog konfirmasi
+                  bool? confirmDelete = await showDialog<bool>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        // title: const Text('Konfirmasi Penghapusan'),
+                        content: const Text(
+                            'Apakah Anda yakin ingin menghapus produk ini?'),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(
+                                  false); // Menutup dialog dan mengembalikan false
+                            },
+                            child: const Text('Tidak'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(
+                                  true); // Menutup dialog dan mengembalikan true
+                            },
+                            child: const Text('Ya'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+
+                  // Jika pengguna mengonfirmasi penghapusan, lakukan aksi penghapusan
+                  if (confirmDelete == true) {
                     context
                         .read<ProductBloc>()
                         .add(DeleteProduct(product.productId!));
-                  },
-                  child: BlocConsumer<ProductBloc, ProductState>(
-                    listener: (context, state) {
-                      if (state is StateError) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(state.message),
-                          ),
-                        );
-                      }
-                      if (state is StateSuccessDelete) {
-                        Navigator.pop(context);
-                      }
-                    },
-                    builder: (context, state) {
-                      return Text(
-                        state is StateLoadingDelete
-                            ? "Loading..."
-                            : 'Delete Product',
-                        style: const TextStyle(color: Colors.red),
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  backgroundColor: Colors.red, // Warna latar belakang tombol
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: BlocConsumer<ProductBloc, ProductState>(
+                  listener: (context, state) {
+                    if (state is StateError) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(state.message),
+                        ),
                       );
-                    },
-                  ))
+                    }
+                    if (state is StateSuccessDelete) {
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) {
+                        return const DeleteSuccessAlert();
+                      }));
+                    }
+                  },
+                  builder: (context, state) {
+                    return Text(
+                      state is StateLoadingDelete
+                          ? "Loading..."
+                          : 'Delete Product',
+                      style: const TextStyle(color: Colors.white),
+                    );
+                  },
+                ),
+              )
             ],
           )),
     );

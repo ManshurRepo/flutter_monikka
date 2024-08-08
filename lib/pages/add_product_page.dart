@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_scanqr/bloc/product/product_bloc.dart';
+import 'package:flutter_scanqr/widgets/add_success_alert.dart';
 import 'package:intl/intl.dart'; // Tambahkan ini untuk format tanggal
 
 class AddProductPage extends StatelessWidget {
@@ -235,13 +236,11 @@ class AddProductPage extends StatelessWidget {
                       );
                     }
                     if (state is StateSuccessAdd) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Produk berhasil ditambahkan"),
-                        ),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const AddSuccessAlert()),
                       );
-
-                      Navigator.pop(context);
                     }
                   },
                   builder: (context, state) {
