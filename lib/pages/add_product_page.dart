@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_scanqr/bloc/product/product_bloc.dart';
 import 'package:flutter_scanqr/routes/router.dart';
+import 'package:intl/intl.dart'; // Tambahkan ini untuk format tanggal
 
 class AddProductPage extends StatelessWidget {
   AddProductPage({super.key});
@@ -21,6 +22,21 @@ class AddProductPage extends StatelessWidget {
   final TextEditingController statusController = TextEditingController();
   final TextEditingController keteranganController = TextEditingController();
   final TextEditingController divisiController = TextEditingController();
+
+  Future<void> _selectDate(
+      BuildContext context, TextEditingController controller) async {
+    DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null) {
+      String formattedDate = DateFormat('dd-MM-yyyy')
+          .format(picked); // Format tanggal menjadi string
+      controller.text = formattedDate;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,33 +122,48 @@ class AddProductPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10))),
             ),
             const SizedBox(height: 10),
-            TextField(
-              autocorrect: false,
-              controller: orderController,
-              decoration: InputDecoration(
-                  labelText: 'Tanggal Order',
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10))),
+            GestureDetector(
+              onTap: () => _selectDate(context, orderController),
+              child: AbsorbPointer(
+                child: TextField(
+                  autocorrect: false,
+                  controller: orderController,
+                  decoration: InputDecoration(
+                      labelText: 'Tanggal Order',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10))),
+                ),
+              ),
             ),
             const SizedBox(height: 30),
-            TextField(
-              autocorrect: false,
-              controller: receiptController,
-              decoration: InputDecoration(
-                  labelText: 'Tanggal Receipt',
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10))),
+            GestureDetector(
+              onTap: () => _selectDate(context, receiptController),
+              child: AbsorbPointer(
+                child: TextField(
+                  autocorrect: false,
+                  controller: receiptController,
+                  decoration: InputDecoration(
+                      labelText: 'Tanggal Receipt',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10))),
+                ),
+              ),
             ),
             const SizedBox(height: 30),
-            TextField(
-              autocorrect: false,
-              controller: expiredController,
-              decoration: InputDecoration(
-                  labelText: 'Tanggal Expired',
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10))),
+            GestureDetector(
+              onTap: () => _selectDate(context, expiredController),
+              child: AbsorbPointer(
+                child: TextField(
+                  autocorrect: false,
+                  controller: expiredController,
+                  decoration: InputDecoration(
+                      labelText: 'Tanggal Expired',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10))),
+                ),
+              ),
             ),
-             const SizedBox(height: 30),
+            const SizedBox(height: 30),
             TextField(
               autocorrect: false,
               controller: posisiController,
@@ -141,7 +172,7 @@ class AddProductPage extends StatelessWidget {
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10))),
             ),
-             const SizedBox(height: 30),
+            const SizedBox(height: 30),
             TextField(
               autocorrect: false,
               controller: divisiController,
@@ -150,7 +181,7 @@ class AddProductPage extends StatelessWidget {
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10))),
             ),
-             const SizedBox(height: 30),
+            const SizedBox(height: 30),
             TextField(
               autocorrect: false,
               controller: keteranganController,
@@ -159,7 +190,7 @@ class AddProductPage extends StatelessWidget {
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10))),
             ),
-             const SizedBox(height: 30),
+            const SizedBox(height: 30),
             TextField(
               autocorrect: false,
               controller: statusController,
@@ -174,21 +205,20 @@ class AddProductPage extends StatelessWidget {
                   if (codeController.text.length == 10) {
                     context.read<ProductBloc>().add(
                           AddProduct(
-                            sku: skuController.text,
-                            sn: snController.text,
-                            divisi: divisiController.text,
-                            keterangan: keteranganController.text,
-                            lisensi2: lisensi2Controller.text,
-                            lisensi: lisensiController.text,
-                            posisi: posisiController.text,
-                            status: statusController.text,
-                            code: codeController.text,
-                            name: nameController.text,
-                            qty: int.tryParse(qtyController.text) ?? 0,
-                            expired: expiredController.text,
-                            order: orderController.text,
-                            receipt: receiptController.text
-                          ),
+                              sku: skuController.text,
+                              sn: snController.text,
+                              divisi: divisiController.text,
+                              keterangan: keteranganController.text,
+                              lisensi2: lisensi2Controller.text,
+                              lisensi: lisensiController.text,
+                              posisi: posisiController.text,
+                              status: statusController.text,
+                              code: codeController.text,
+                              name: nameController.text,
+                              qty: int.tryParse(qtyController.text) ?? 0,
+                              expired: expiredController.text,
+                              order: orderController.text,
+                              receipt: receiptController.text),
                         );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

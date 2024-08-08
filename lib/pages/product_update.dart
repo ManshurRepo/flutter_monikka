@@ -1,15 +1,16 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_scanqr/bloc/product/product_bloc.dart';
 import 'package:flutter_scanqr/models/product_model.dart';
 import 'package:flutter_scanqr/routes/router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:intl/intl.dart';
 
 class UpdateProductPage extends StatelessWidget {
   UpdateProductPage(this.id, this.product, {super.key});
 
   final String id;
-
   final ProductModel product;
 
   final TextEditingController codeController = TextEditingController();
@@ -26,6 +27,19 @@ class UpdateProductPage extends StatelessWidget {
   final TextEditingController statusController = TextEditingController();
   final TextEditingController keteranganController = TextEditingController();
   final TextEditingController divisiController = TextEditingController();
+
+  Future<void> _selectDate(BuildContext context, TextEditingController controller) async {
+    DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null) {
+      String formattedDate = DateFormat('dd-MM-yyyy').format(picked); // Format tanggal menjadi string
+      controller.text = formattedDate;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -144,31 +158,46 @@ class UpdateProductPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10))),
               ),
               const SizedBox(height: 10),
-              TextField(
-                autocorrect: false,
-                controller: orderController,
-                decoration: InputDecoration(
-                    labelText: 'Tanggal Order',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10))),
+              GestureDetector(
+                onTap: () => _selectDate(context, orderController),
+                child: AbsorbPointer(
+                  child: TextField(
+                    autocorrect: false,
+                    controller: orderController,
+                    decoration: InputDecoration(
+                        labelText: 'Tanggal Order',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10))),
+                  ),
+                ),
               ),
               const SizedBox(height: 30),
-              TextField(
-                autocorrect: false,
-                controller: receiptController,
-                decoration: InputDecoration(
-                    labelText: 'Tanggal Receipt',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10))),
+              GestureDetector(
+                onTap: () => _selectDate(context, receiptController),
+                child: AbsorbPointer(
+                  child: TextField(
+                    autocorrect: false,
+                    controller: receiptController,
+                    decoration: InputDecoration(
+                        labelText: 'Tanggal Receipt',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10))),
+                  ),
+                ),
               ),
               const SizedBox(height: 30),
-              TextField(
-                autocorrect: false,
-                controller: expiredController,
-                decoration: InputDecoration(
-                    labelText: 'Tanggal Expired',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10))),
+              GestureDetector(
+                onTap: () => _selectDate(context, expiredController),
+                child: AbsorbPointer(
+                  child: TextField(
+                    autocorrect: false,
+                    controller: expiredController,
+                    decoration: InputDecoration(
+                        labelText: 'Tanggal Expired',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10))),
+                  ),
+                ),
               ),
               const SizedBox(height: 30),
               TextField(
