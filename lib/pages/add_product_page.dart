@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_scanqr/bloc/product/product_bloc.dart';
-import 'package:flutter_scanqr/routes/router.dart';
 import 'package:intl/intl.dart'; // Tambahkan ini untuk format tanggal
 
 class AddProductPage extends StatelessWidget {
@@ -242,7 +241,7 @@ class AddProductPage extends StatelessWidget {
                         ),
                       );
 
-                      context.pop();
+                      Navigator.pop(context);
                     }
                   },
                   builder: (context, state) {

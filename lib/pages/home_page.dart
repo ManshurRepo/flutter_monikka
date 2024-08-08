@@ -4,8 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_scanqr/bloc/auth/auth_bloc.dart';
 import 'package:flutter_scanqr/bloc/product/product_bloc.dart';
 import 'package:flutter_scanqr/models/product_model.dart';
-import 'package:flutter_scanqr/routes/router.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:flutter_scanqr/pages/add_product_page.dart';
+import 'package:flutter_scanqr/pages/login_page.dart';
+import 'package:flutter_scanqr/pages/products_page.dart';
 
 import 'product_update.dart';
 
@@ -40,7 +42,8 @@ class HomePageState extends State<HomePage> {
             BlocConsumer<AuthBloc, AuthState>(
               listener: (context, state) {
                 if (state is AuthStateLogout) {
-                  return context.goNamed(Routes.login);
+                   Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => LoginPage()));
                 }
               },
               builder: (context, state) {
@@ -75,14 +78,20 @@ class HomePageState extends State<HomePage> {
                 title = "Add Product";
                 icon = Icons.post_add_rounded;
                 onTap = () {
-                  context.goNamed(Routes.addProduct);
+                  Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) =>  AddProductPage()),
+              );
                 };
                 break;
               case 1:
                 title = "Products";
                 icon = Icons.list_alt_outlined;
                 onTap = () {
-                  context.goNamed(Routes.products);
+                  Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) =>  const ProductsPage()),
+              );
                 };
                 break;
               case 2:
@@ -92,29 +101,36 @@ class HomePageState extends State<HomePage> {
                   if (!_isMounted) return;
 
                   String barcode = await FlutterBarcodeScanner.scanBarcode(
-                    "#000000", "CANCEL", true, ScanMode.QR);
+                      "#000000", "CANCEL", true, ScanMode.QR);
 
                   if (barcode.isNotEmpty) {
                     try {
                       var firestore = FirebaseFirestore.instance;
-                      var snapshot = await firestore.collection("products").where("code", isEqualTo: barcode).get();
-                      
+                      var snapshot = await firestore
+                          .collection("products")
+                          .where("code", isEqualTo: barcode)
+                          .get();
+
                       if (!_isMounted) return;
 
                       if (snapshot.docs.isEmpty) {
                         // ignore: use_build_context_synchronously
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Produk dengan kode $barcode tidak ditemukan")),
+                          SnackBar(
+                              content: Text(
+                                  "Produk dengan kode $barcode tidak ditemukan")),
                         );
                       } else {
                         var productData = snapshot.docs.first.data();
-                        ProductModel product = ProductModel.fromJson(productData);
+                        ProductModel product =
+                            ProductModel.fromJson(productData);
 
                         Navigator.push(
                           // ignore: use_build_context_synchronously
                           context,
                           MaterialPageRoute(
-                            builder: (context) => UpdateProductPage(product.productId!, product),
+                            builder: (context) =>
+                                UpdateProductPage(product.productId!, product),
                           ),
                         );
                       }

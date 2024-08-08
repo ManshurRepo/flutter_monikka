@@ -1,9 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_scanqr/bloc/product/product_bloc.dart';
 import 'package:flutter_scanqr/models/product_model.dart';
-import 'package:flutter_scanqr/routes/router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:intl/intl.dart';
 
@@ -28,7 +26,8 @@ class UpdateProductPage extends StatelessWidget {
   final TextEditingController keteranganController = TextEditingController();
   final TextEditingController divisiController = TextEditingController();
 
-  Future<void> _selectDate(BuildContext context, TextEditingController controller) async {
+  Future<void> _selectDate(
+      BuildContext context, TextEditingController controller) async {
     DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -36,7 +35,8 @@ class UpdateProductPage extends StatelessWidget {
       lastDate: DateTime(2101),
     );
     if (picked != null) {
-      String formattedDate = DateFormat('dd-MM-yyyy').format(picked); // Format tanggal menjadi string
+      String formattedDate = DateFormat('dd-MM-yyyy')
+          .format(picked); // Format tanggal menjadi string
       controller.text = formattedDate;
     }
   }
@@ -275,7 +275,7 @@ class UpdateProductPage extends StatelessWidget {
                       );
                     }
                     if (state is StateSuccessEdit) {
-                      context.pop();
+                      Navigator.pop(context);
                     }
                   },
                   builder: (context, state) {
@@ -304,7 +304,7 @@ class UpdateProductPage extends StatelessWidget {
                         );
                       }
                       if (state is StateSuccessDelete) {
-                        context.pop();
+                        Navigator.pop(context);
                       }
                     },
                     builder: (context, state) {

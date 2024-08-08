@@ -2,7 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_scanqr/bloc/auth/auth_bloc.dart';
-import 'package:flutter_scanqr/routes/router.dart';
+import 'package:flutter_scanqr/pages/register_page.dart';
+
+import 'home_page.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -62,7 +64,10 @@ class LoginPage extends StatelessWidget {
                 listener: (context, state) {
                   if (state is AuthStateLogin) {
                     print('User ID Token: ${state.idToken}');
-                    context.goNamed(Routes.home);
+                    Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const HomePage()),
+              );
                   }
                   if (state is AuthStateError) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -103,7 +108,10 @@ class LoginPage extends StatelessWidget {
             const SizedBox(height: 20),
             TextButton(
               onPressed: () {
-                context.goNamed(Routes.register);
+                Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) =>  RegisterPage()),
+              );
               },
               child: const Text(
                 "Belum punya akun? Register di sini.",

@@ -19,6 +19,8 @@
   
 //   runApp(const MyApp());
   
+//   // Menambahkan delay 5 detik sebelum menghapus splash screen
+//   await Future.delayed(const Duration(seconds: 5));
 //   FlutterNativeSplash.remove();
 // }
 
@@ -51,7 +53,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_scanqr/bloc/auth/auth_bloc.dart';
 import 'package:flutter_scanqr/bloc/product/product_bloc.dart';
 import 'firebase_options.dart';
-import 'routes/router.dart';
+import 'pages/login_page.dart'; // Pastikan Anda telah membuat halaman login
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -82,8 +84,8 @@ class MyApp extends StatelessWidget {
           create: (context) => ProductBloc(),
         ),
       ],
-      child: MaterialApp.router(
-        routerConfig: router,
+      child: MaterialApp(
+        home: LoginPage(), // Menentukan halaman login sebagai home
         debugShowCheckedModeBanner: false,
       ),
     );
